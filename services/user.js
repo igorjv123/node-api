@@ -26,8 +26,8 @@ exports.findUserById = function(id, cb){
     })
 }
 
-exports.createUser = function(message, cb){
-    comments.push(users);
+exports.createUser = function(user, cb){
+    users.push(user);
     cb(null, users)
 }
 

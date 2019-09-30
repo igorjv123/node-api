@@ -28,7 +28,7 @@ userRouter.post("/", function(req, res){
       console.log(err);
       return res.sendStatus(500);
     }
-    res.send(user);
+    res.send(result);
   })
 });
 
