@@ -19,6 +19,7 @@ exports.findListById = function(id, cb){
     lists.forEach(list => {
         if(list.id == id){
             cb(null, list)
+            return
         }
     })
 }
@@ -29,18 +30,22 @@ exports.createList = function(list, cb){
 }
 
 exports.changeList = function(id, newData, cb){
-    lists.forEach(list => {
+    lists.forEach((list, index) => {
         if(list.id == id){
-            list = {...newData}
+            lists[index] = {...newData}
+            cb(null, lists[index]);
+            return
         }
     })
 }
 
 exports.deleteList = function(id, cb){
-    lists.forEach(list => {
+    console.log(id)
+    lists.forEach((list, index) => {
         if(list.id == id){
-            const index = lists.indexOf(list)
             lists.splice(index, 1)
+            cb(null, list);
+            return
         }
     })
 }

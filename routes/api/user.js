@@ -17,7 +17,7 @@ userRouter.get("/:id", function(req, res){
       console.log(err);
       return res.sendStatus(500);
     }
-    console.log(doc)
+    console.log(doc);
     res.send(doc);
   })
 });
@@ -32,17 +32,17 @@ userRouter.post("/", function(req, res){
   })
 });
 
-userRouter.put("/:id", function(req, res){
+userRouter.put("/:id", function(req, res) {
   Users.changeUser(req.params.id, req.body, function(err, result){
     if (err) {
       console.log(err);
       return res.sendStatus(500);
     }
-    res.sendStatus(200);
+    res.send(result);
   })
 });﻿
 
-userRouter.delete("/:id", function(req, res){
+userRouter.delete("/:id", function(req, res) {
   Users.deleteUser(req.params.id, function(err, result){
     if (err) {
       console.log(err);

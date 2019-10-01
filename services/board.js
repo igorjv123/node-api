@@ -27,18 +27,22 @@ exports.createBoard = function(board, cb){
 }
 
 exports.changeBoard = function(id, newData, cb){
-    boards.forEach(board => {
+    boards.forEach((board, index) => {
         if(board.id == id){
-            board = {...newData}
+            boards[index] = {...newData}
+            cb(null, boards[index]);
+            return
         }
     })
 }
 
 exports.deleteBoard = function(id, cb){
-    boards.forEach(board => {
+    console.log(id)
+    boards.forEach((board, index) => {
         if(board.id == id){
-            const index = boards.indexOf(board)
             boards.splice(index, 1)
+            cb(null, board);
+            return
         }
     })
 }

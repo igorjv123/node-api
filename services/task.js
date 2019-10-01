@@ -33,18 +33,21 @@ exports.createTask = function(task, cb){
 }
 
 exports.changeTask = function(id, newData, cb){
-    tasks.forEach(task => {
+    tasks.forEach((task, index) => {
         if(task.id == id){
-            task = {...newData}
+            tasks[index] = {...newData}
+            cb(null, tasks[index]);
         }
     })
 }
 
 exports.deleteTask = function(id, cb){
-    tasks.forEach(task => {
+    console.log(id)
+    tasks.forEach((task, index) => {
         if(task.id == id){
-            const index = tasks.indexOf(task)
             tasks.splice(index, 1)
+            cb(null, task);
         }
     })
 }
+
