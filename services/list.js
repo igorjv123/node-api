@@ -1,51 +1,44 @@
-const lists = [
-    {
-        id: 1,
-        title: 'My list1',
-        order: '....',
-    },
-    {
-        id: 1,
-        title: 'My list2',
-        order: '....',
-    }
-]
+var db = require('../db/db');
+const ObjectID = require('mongodb').ObjectID;
 
 exports.getAllLists = function(cb){
-    cb(null, lists);
+    db.get().collection('lists').find().toArray((err, docs)=>{
+        cb(err, docs);
+    });
 }
 
 exports.findListById = function(id, cb){
-    lists.forEach(list => {
-        if(list.id == id){
-            cb(null, list)
-            return
-        }
+    db.get().collection('lists').findOne({_id: ObjectID(id)}, (err,doc)=>{
+        cb(err, doc);
     })
 }
 
 exports.createList = function(list, cb){
-    lists.push(list);
-    cb(null, list)
+    db.get().collection('lists').insert(message, (err, result)=>{
+        cb(err, result);
+    });
 }
 
+
 exports.changeList = function(id, newData, cb){
-    lists.forEach((list, index) => {
-        if(list.id == id){
-            lists[index] = {...newData}
-            cb(null, lists[index]);
-            return
+    db.get().collection('lists').update(
+        { _id: ObjectID(id) },
+        { $set: { ...newData }},
+        {
+            upsert: false,
+            multi: false
+        },
+        (err, result)=>{
+            cb(err, result);
         }
-    })
+    );
 }
 
 exports.deleteList = function(id, cb){
-    console.log(id)
-    lists.forEach((list, index) => {
-        if(list.id == id){
-            lists.splice(index, 1)
-            cb(null, list);
-            return
+    db.get().collection('lists').deleteOne(
+        { _id: ObjectID(id)},
+        (err, result)=>{
+            cb(err, result);
         }
-    })
+    );
 }

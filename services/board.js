@@ -1,48 +1,43 @@
-const boards = [
-    {
-        id: 1,
-        title: 'My board1',
-    },
-    {
-        id: 1,
-        title: 'My board2',
-    }
-]
+var db = require('../db/db');
+const ObjectID = require('mongodb').ObjectID;
 
 exports.getAllBoards = function(cb){
-    cb(null, boards);
+    db.get().collection('boards').find().toArray((err, docs)=>{
+        cb(err, docs);
+    });
 }
 
 exports.findBoardById = function(id, cb){
-    boards.forEach(board => {
-        if(board.id == id){
-            cb(null, board)
-        }
+    db.get().collection('boards').findOne({_id: ObjectID(id)}, (err,doc)=>{
+        cb(err, doc);
     })
 }
 
 exports.createBoard = function(board, cb){
-    boards.push(board);
-    cb(null, board)
+    db.get().collection('boards').insert(message, (err, result)=>{
+        cb(err, result);
+    });
 }
 
 exports.changeBoard = function(id, newData, cb){
-    boards.forEach((board, index) => {
-        if(board.id == id){
-            boards[index] = {...newData}
-            cb(null, boards[index]);
-            return
+    db.get().collection('boards').update(
+        { _id: ObjectID(id) },
+        { $set: { ...newData }},
+        {
+            upsert: false,
+            multi: false
+        },
+        (err, result)=>{
+            cb(err, result);
         }
-    })
+    );
 }
 
 exports.deleteBoard = function(id, cb){
-    console.log(id)
-    boards.forEach((board, index) => {
-        if(board.id == id){
-            boards.splice(index, 1)
-            cb(null, board);
-            return
+    db.get().collection('boards').deleteOne(
+        { _id: ObjectID(id)},
+        (err, result)=>{
+            cb(err, result);
         }
-    })
+    );
 }

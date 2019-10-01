@@ -1,53 +1,40 @@
-const tasks = [
-    {
-        id: 1,
-        title: 'Do...',
-        order: '....',
-        description: '....',
-        assignee: '....'
-    },
-    {
-        id: 1,
-        title: 'Do smth',
-        order: '....',
-        description: '....',
-        assignee: '....'
-    }
-]
-
 exports.getAllTasks = function(cb){
-    cb(null, tasks);
+    db.get().collection('tasks').find().toArray((err, docs)=>{
+        cb(err, docs);
+    });
 }
 
 exports.findTaskById = function(id, cb){
-    tasks.forEach(task => {
-        if(task.id == id){
-            cb(null, task)
-        }
+    db.get().collection('tasks').findOne({_id: ObjectID(id)}, (err,doc)=>{
+        cb(err, doc);
     })
 }
 
-exports.createTask = function(task, cb){
-    tasks.push(task);
-    cb(null, task)
+exports.createTask = function(message, cb){
+    db.get().collection('tasks').insert(message, (err, result)=>{
+        cb(err, result);
+    });
 }
 
 exports.changeTask = function(id, newData, cb){
-    tasks.forEach((task, index) => {
-        if(task.id == id){
-            tasks[index] = {...newData}
-            cb(null, tasks[index]);
+    db.get().collection('tasks').update(
+        { _id: ObjectID(id) },
+        { $set: { ...newData }},
+        {
+            upsert: false,
+            multi: false
+        },
+        (err, result)=>{
+            cb(err, result);
         }
-    })
+    );
 }
 
 exports.deleteTask = function(id, cb){
-    console.log(id)
-    tasks.forEach((task, index) => {
-        if(task.id == id){
-            tasks.splice(index, 1)
-            cb(null, task);
+    db.get().collection('tasks').deleteOne(
+        { _id: ObjectID(id)},
+        (err, result)=>{
+            cb(err, result);
         }
-    })
+    );
 }
-

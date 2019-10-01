@@ -1,50 +1,43 @@
-const users = [
-    {
-        id: '1',
-        name: 'John',
-        email: 'as@as.as'
-    },
-    {
-        id: '2',
-        name: 'Drake',
-        email: 'drake@dr.dr'
-    }
-]
+var db = require('../db/db');
+const ObjectID = require('mongodb').ObjectID;
 
 exports.getAllUsers = function(cb){
-    cb(null, users);
+    db.get().collection('users').find().toArray((err, docs)=>{
+        cb(err, docs);
+    });
 }
 
 exports.findUserById = function(id, cb){
-    users.forEach(user => {
-        if(user.id === id){
-            cb(null, user)
-            return
-        }
-
+    db.get().collection('users').findOne({_id: ObjectID(id)}, (err,doc)=>{
+        cb(err, doc);
     })
 }
 
 exports.createUser = function(user, cb){
-    users.push(user);
-    cb(null, users)
+    db.get().collection('users').insert(message, (err, result)=>{
+        cb(err, result);
+    });
 }
 
 exports.changeUser = function(id, newData, cb){
-    users.forEach((user, index) => {
-        if(user.id == id){
-            users[index] = {...newData}
-            cb(null, users[index]);
+    db.get().collection('users').update(
+        { _id: ObjectID(id) },
+        { $set: { ...newData }},
+        {
+            upsert: false,
+            multi: false
+        },
+        (err, result)=>{
+            cb(err, result);
         }
-    })
+    );
 }
 
 exports.deleteUser = function(id, cb){
-    console.log(id)
-    users.forEach((user, index) => {
-        if(user.id == id){
-            users.splice(index, 1)
-            cb(null, user);
+    db.get().collection('users').deleteOne(
+        { _id: ObjectID(id)},
+        (err, result)=>{
+            cb(err, result);
         }
-    })
+    );
 }

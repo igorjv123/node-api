@@ -3,7 +3,7 @@ const express = require('express');
 const path = require("path");
 const bodyParser = require('body-parser');
 var cors = require('cors')
-
+var db = require('./db/db');
 
 const hostname = 'localhost';
 const port = 3001;
@@ -19,6 +19,11 @@ app.use(express.static(staticPath));
 
 const routes = require("./routes/api/routes")(app);
 
-app.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
+db.connect('mongodb://localhost:27017/users', function(err){
+    if(err){
+        return console.log(err);
+    }
+    app.listen(port, hostname, () => {
+        console.log(`Server running at http://${hostname}:${port}/`);
+    });
 });
